@@ -18,7 +18,7 @@ h1 {
 
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 30px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,11 @@ body {
   font-size: 30px;
   color: white;
   background-color: var(--color-accent);
+}
+
+a {
+  color: white;
+  text-decoration: none;
 }
 
 .btn {
@@ -118,4 +123,21 @@ body {
 
 .footer {
   height: 80px;
+  border-top: 2px dashed white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 20px;
+  font-size: 24px;
+}
+
+.footer__year {
+  margin-right: auto;
+}
+
+.footer__rss {
+  width: 100px;
+  height: 37px;
+  background: url("./assets/img/svg/rs_school_js.svg") no-repeat center;
+  background-size: cover;
 }
