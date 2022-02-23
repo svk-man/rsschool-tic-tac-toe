@@ -90,7 +90,7 @@ a {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.game__field-ceil {
+.game__field-cell {
   width: 85px;
   height: 85px;
   background-position: center;
@@ -99,30 +99,30 @@ a {
   transition: .3s;
 }
 
-.game__field-ceil:nth-child(-n + 6) {
+.game__field-cell:nth-child(-n + 6) {
   border-bottom: 2px dashed var(--color-accent);
 }
 
-.game__field-ceil:nth-child(3n + 2),
-.game__field-ceil:nth-child(3n + 3) {
+.game__field-cell:nth-child(3n + 2),
+.game__field-cell:nth-child(3n + 3) {
   border-left: 2px dashed var(--color-accent);
 }
 
-.game__field-ceil:hover {
+.game__field-cell:hover {
   box-shadow: 0px 0px 0px 2px white inset;
   cursor: pointer;
 }
 
-.game__field-ceil--astronaut {
+.game__field-cell--astronaut {
   background-image: url("./assets/img/svg/astronaut.svg");
 }
 
-.game__field-ceil--alien {
+.game__field-cell--alien {
   background-image: url("./assets/img/svg/alien.svg");
 }
 
-.game__field-ceil--astronaut:hover,
-.game__field-ceil--alien:hover {
+.game__field-cell--astronaut:hover,
+.game__field-cell--alien:hover {
   box-shadow: none;
   cursor: not-allowed;
 }
