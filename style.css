@@ -1,0 +1,121 @@
+@font-face {
+  font-family: 'Neucha';
+  src: url("assets/fonts/Neucha-Regular.ttf");
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-accent: #333333;
+}
+
+h1 {
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'Neucha', cursive;
+  font-size: 30px;
+  color: white;
+  background-color: var(--color-accent);
+}
+
+.btn {
+  padding: 6px 24px;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 22px;
+  font-family: inherit;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  background-color: white;
+  transition: .3s;
+}
+
+.btn:hover {
+  color: white;
+  background-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.main {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game {
+  text-align: center;
+}
+
+.game__title {
+  margin-bottom: 30px;
+  font-family: inherit;
+  font-weight: 400;
+  color: inherit;
+  text-transform: uppercase;
+}
+
+.game__field {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('./assets/img/svg/moon.svg') no-repeat center;
+  background-size: cover;
+}
+
+.game__field-inner {
+  width: calc(85px * 3);
+  height: calc(85px * 3);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.game__field-ceil {
+  width: 85px;
+  height: 85px;
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  transition: .3s;
+}
+
+.game__field-ceil:nth-child(-n + 6) {
+  border-bottom: 2px dashed var(--color-accent);
+}
+
+.game__field-ceil:nth-child(3n + 2),
+.game__field-ceil:nth-child(3n + 3) {
+  border-left: 2px dashed var(--color-accent);
+}
+
+.game__field-ceil:nth-child(1) {
+  background-image: url("./assets/img/svg/astronaut.svg");
+}
+
+.game__field-ceil:nth-child(5) {
+  background-image: url("./assets/img/svg/alien.svg");
+}
+
+.game__field-ceil:hover {
+  box-shadow:0px 0px 0px 2px white inset;
+  cursor: pointer;
+}
+
+.footer {
+  height: 80px;
+}
