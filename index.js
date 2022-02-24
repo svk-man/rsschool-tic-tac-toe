@@ -100,7 +100,7 @@ function restart() {
 }
 
 function openModal() {
-  modal.style.display = "block";
+  modal.style.display = "flex";
 }
 
 function closeModal() {

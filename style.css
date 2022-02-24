@@ -87,15 +87,15 @@ a {
 }
 
 .game__field-inner {
-  width: calc(85px * 3);
-  height: calc(85px * 3);
+  width: calc(75px * 3);
+  height: calc(75px * 3);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .game__field-cell {
-  width: 85px;
-  height: 85px;
+  width: 75px;
+  height: 75px;
   background-position: center;
   background-size: 80%;
   background-repeat: no-repeat;
@@ -159,18 +159,20 @@ a {
   top: 0;
   width: 100%;
   height: 100%;
+  padding: 0 20px;
   overflow: auto;
   color: var(--color-accent);
   background-color: rgba(3, 3, 3, 0.4);
 }
 
 .modal__content {
-  background-color: white;
-  margin: 15% auto;
+  max-width: 500px;
+  min-width: 300px;
+  margin: auto;
   padding: 20px;
   border: 1px solid var(--color-accent);
   border-radius: 10px;
-  width: 80%;
+  background-color: white;
 }
 
 .modal__header {
