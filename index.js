@@ -53,6 +53,7 @@ function makeStep(event) {
       } else {
         gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ALIEN : GAME_FIELD_CELL_CLASSES.ASTRONAUT);
       }
+
       if (isWinCombinationExists() || step === 9) {
         modalTitle.textContent = 'End game';
         modalBody.textContent = '';
@@ -61,7 +62,7 @@ function makeStep(event) {
         p.classList.add('modal__text');
 
         let recordText = '';
-        if (step !== 9) {
+        if (isWinCombinationExists()) {
           if (getPlayer() === 'Astronaut') {
             p.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
             p.classList.add(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
