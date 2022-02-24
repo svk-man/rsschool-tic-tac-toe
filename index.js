@@ -2,6 +2,7 @@ const gameField = document.querySelector('.game__field');
 const gameFieldCells = gameField.querySelectorAll('.game__field-cell');
 const gameBtnRestart = document.querySelector('.game__btn-restart')
 const gameBtnRecords = document.querySelector('.game__btn-records');
+const gameBtnSettings = document.querySelector('.game__btn-settings');
 const modal = document.querySelector('.modal');
 const modalBtnClose = modal.querySelector('.modal__btn-close');
 const modalTitle = modal.querySelector('.modal__title');
@@ -11,6 +12,7 @@ gameField.addEventListener('click', makeStep);
 gameBtnRestart.addEventListener('click', restart);
 modalBtnClose.addEventListener('click', closeModal);
 gameBtnRecords.addEventListener('click', showRecords);
+gameBtnSettings.addEventListener('click', showSettings);
 window.addEventListener('click', (event) => {
   if (event.target == modal) {
     closeModal();
@@ -28,6 +30,11 @@ const MODAL_TEXT_ICON_CLASSES = {
   'ALIEN': 'modal__text--alien',
   'DRAW': 'modal__text--draw',
 };
+
+const planets = ['Sun', 'Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
+const PLANET_TEXT = 'Planet';
+
+setGameFieldPlanet();
 
 let step = 1;
 
@@ -122,12 +129,12 @@ function showRecords() {
   modalBody.textContent = '';
 
   const ol = document.createElement('ol');
-  ol.classList.add('modal__list');
+  ol.classList.add('modal__records-list');
 
   const records = getRecords();
   records.forEach(recordText => {
     const li = document.createElement('li');
-    li.classList.add('modal__list-item');
+    li.classList.add('modal__records-item');
     li.textContent = recordText;
     ol.append(li);
   });
@@ -159,4 +166,82 @@ function getRecords() {
   }
   
   return [];
+}
+
+function showSettings() {
+  modalBody.textContent = '';
+  modalTitle.textContent = 'Settings';
+
+  restart();
+
+  const form = document.createElement('form');
+  form.classList.add('modal__settings-form', 'settings-form');
+
+  const fieldset = document.createElement('fieldset');
+  fieldset.classList.add('settings-form__planet');
+
+  const legend = document.createElement('legend');
+  legend.classList.add('settings-form__planet-title');
+  legend.textContent = PLANET_TEXT;
+  fieldset.append(legend);
+
+  planets.forEach(planet => {
+    const label = document.createElement('label');
+    label.classList.add('settings-form__planet-item', 'settings-form__planet-item--' + planet.toLowerCase());
+    label.textContent = planet;
+
+    const input = document.createElement('input');
+    input.classList.add('settings-form__planet-input');
+    input.type = 'radio';
+    input.checked = (getPlanet() === planet);
+    input.name = PLANET_TEXT;
+    input.value = planet;
+    label.append(input);
+
+    const span = document.createElement('span');
+    span.classList.add('settings-form__planet-checkmark');
+    label.append(span);
+  
+    fieldset.append(label);
+  });
+
+  form.append(fieldset);
+  form.insertAdjacentHTML('beforeend', '<input class="btn settings-form__btn-save" type="submit" value="Save">');
+
+  form.addEventListener('submit', saveSettings);
+
+  modalBody.append(form);
+
+  openModal();
+}
+
+function saveSettings(event) {
+  event.preventDefault();
+
+  const planet = event.target[PLANET_TEXT].value;
+  if (planets.includes(planet)) {
+    savePlanet(planet);
+  }
+
+  setGameFieldPlanet();
+
+  closeModal();
+}
+
+function savePlanet(planetName) {
+  localStorage.setItem(PLANET_TEXT, planetName);
+}
+
+function getPlanet() {
+  const planet = localStorage.getItem(PLANET_TEXT);
+
+  if (planet !== null && planet !== undefined) {
+    return planet;
+  }
+
+  return 'Moon';
+}
+
+function setGameFieldPlanet() {
+  gameField.style.backgroundImage = `url('./assets/img/svg/${getPlanet().toLowerCase()}.svg')`;
 }
