@@ -34,6 +34,9 @@ const MODAL_TEXT_ICON_CLASSES = {
 const planets = ['Sun', 'Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'];
 const PLANET_TEXT = 'Planet';
 
+const players = ['Astronaut', 'Alien'];
+const PLAYER_TEXT = 'Player';
+
 setGameFieldPlanet();
 
 let step = 1;
@@ -45,7 +48,11 @@ function makeStep(event) {
     const gameFieldCell = gameFieldElement;
     const isStepPossible = gameFieldCell.classList.length === 1;
     if (isStepPossible) {
-      gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
+      if (getPlayer() === 'Astronaut') {
+        gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
+      } else {
+        gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ALIEN : GAME_FIELD_CELL_CLASSES.ASTRONAUT);
+      }
       if (isWinCombinationExists() || step === 9) {
         modalTitle.textContent = 'End game';
         modalBody.textContent = '';
@@ -55,9 +62,15 @@ function makeStep(event) {
 
         let recordText = '';
         if (step !== 9) {
-          p.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
-          p.classList.add(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
-          recordText += `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'}: `;
+          if (getPlayer() === 'Astronaut') {
+            p.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
+            p.classList.add(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
+            recordText += `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'}: `;
+          } else {
+            p.textContent = `${isFirstPlayer() ? 'Aliens' : 'Astronauts'} win!`;
+            p.classList.add(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ALIEN : MODAL_TEXT_ICON_CLASSES.ASTRONAUT);
+            recordText += `${isFirstPlayer() ? 'Aliens' : 'Astronauts'}: `;
+          }
         } else {
           p.textContent = 'It\'s draw!';
           p.classList.add(MODAL_TEXT_ICON_CLASSES.DRAW);
@@ -101,7 +114,13 @@ function isWinCombinationExists() {
 }
 
 function isWinCombination(winCombination) {
-  const isFillGameFieldCell = gameFieldCell => gameFieldCell.classList.contains(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
+  const isFillGameFieldCell = gameFieldCell => {
+    if (getPlayer() === 'Astronaut') {
+      return gameFieldCell.classList.contains(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
+    }
+
+    return gameFieldCell.classList.contains(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ALIEN : GAME_FIELD_CELL_CLASSES.ASTRONAUT);
+  };
 
   return isFillGameFieldCell(gameFieldCells[winCombination[0]]) &&
     isFillGameFieldCell(gameFieldCells[winCombination[1]]) &&
@@ -176,7 +195,18 @@ function showSettings() {
 
   const form = document.createElement('form');
   form.classList.add('modal__settings-form', 'settings-form');
+  form.append(createSettingsPlayerElement());
+  form.append(createSettingsPlanetElement());
+  form.insertAdjacentHTML('beforeend', '<input class="btn settings-form__btn-save" type="submit" value="Save">');
 
+  form.addEventListener('submit', saveSettings);
+
+  modalBody.append(form);
+
+  openModal();
+}
+
+function createSettingsPlanetElement() {
   const fieldset = document.createElement('fieldset');
   fieldset.classList.add('settings-form__planet');
 
@@ -205,14 +235,39 @@ function showSettings() {
     fieldset.append(label);
   });
 
-  form.append(fieldset);
-  form.insertAdjacentHTML('beforeend', '<input class="btn settings-form__btn-save" type="submit" value="Save">');
+  return fieldset;
+}
 
-  form.addEventListener('submit', saveSettings);
+function createSettingsPlayerElement() {
+  const fieldset = document.createElement('fieldset');
+  fieldset.classList.add('settings-form__player');
 
-  modalBody.append(form);
+  const legend = document.createElement('legend');
+  legend.classList.add('settings-form__player-title');
+  legend.textContent = PLAYER_TEXT;
+  fieldset.append(legend);
 
-  openModal();
+  players.forEach(player => {
+    const label = document.createElement('label');
+    label.classList.add('settings-form__player-item', 'settings-form__player-item--' + player.toLowerCase());
+    label.textContent = player;
+
+    const input = document.createElement('input');
+    input.classList.add('settings-form__player-input');
+    input.type = 'radio';
+    input.checked = (getPlayer() === player);
+    input.name = PLAYER_TEXT;
+    input.value = player;
+    label.append(input);
+
+    const span = document.createElement('span');
+    span.classList.add('settings-form__player-checkmark');
+    label.append(span);
+  
+    fieldset.append(label);
+  });
+
+  return fieldset;
 }
 
 function saveSettings(event) {
@@ -221,6 +276,11 @@ function saveSettings(event) {
   const planet = event.target[PLANET_TEXT].value;
   if (planets.includes(planet)) {
     savePlanet(planet);
+  }
+
+  const player = event.target[PLAYER_TEXT].value;
+  if (players.includes(player)) {
+    savePlayer(player);
   }
 
   setGameFieldPlanet();
@@ -240,6 +300,20 @@ function getPlanet() {
   }
 
   return 'Moon';
+}
+
+function savePlayer(playerName) {
+  localStorage.setItem(PLAYER_TEXT, playerName);
+}
+
+function getPlayer() {
+  const player = localStorage.getItem(PLAYER_TEXT);
+
+  if (player !== null && player !== undefined) {
+    return player;
+  }
+
+  return 'Astronaut';
 }
 
 function setGameFieldPlanet() {

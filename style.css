@@ -257,11 +257,17 @@ a {
   row-gap: 20px;
 }
 
-.settings-form__planet {
+.settings-form__planet,
+.settings-form__player {
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 15px;
 }
 
-.settings-form__planet-item {
+.settings-form__planet-item,
+.settings-form__player-item {
   position: relative;
   display: block;
   padding-left: 35px;
@@ -269,13 +275,15 @@ a {
   user-select: none;
 }
 
-.settings-form__planet-input {
+.settings-form__planet-input,
+.settings-form__player-input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
 }
 
-.settings-form__planet-checkmark {
+.settings-form__planet-checkmark,
+.settings-form__player-checkmark {
   position: absolute;
   top: 1px;
   left: 0;
@@ -330,7 +338,16 @@ a {
   background-image: url("./assets/img/svg/pluto.svg");
 }
 
-.settings-form__planet-input:checked ~ .settings-form__planet-checkmark {
+.settings-form__player-item--astronaut .settings-form__player-checkmark {
+  background-image: url("./assets/img/svg/astronaut-avatar.svg");
+}
+
+.settings-form__player-item--alien .settings-form__player-checkmark {
+  background-image: url("./assets/img/svg/alien-avatar.svg");
+}
+
+.settings-form__planet-input:checked ~ .settings-form__planet-checkmark,
+.settings-form__player-input:checked ~ .settings-form__player-checkmark {
   border-radius: 5px;
   background-color: var(--color-accent);
 }
