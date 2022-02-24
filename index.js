@@ -1,11 +1,28 @@
 const gameField = document.querySelector('.game__field');
 const gameFieldCells = gameField.querySelectorAll('.game__field-cell');
+const gameBtnRestart = document.querySelector('.game__btn-restart');
+const modal = document.querySelector('.modal');
+const modalBtnClose = modal.querySelector('.modal__btn-close');
+const modalText = modal.querySelector('.modal__text');
+
 gameField.addEventListener('click', makeStep);
+modalBtnClose.addEventListener('click', closeModal);
+window.addEventListener('click', (event) => {
+  if (event.target == modal) {
+    closeModal();
+  }
+});
 
 const GAME_FIELD_CELL_CLASSES = {
   'BASIC': 'game__field-cell',
   'ASTRONAUT': 'game__field-cell--astronaut',
   'ALIEN': 'game__field-cell--alien',
+};
+
+const MODAL_TEXT_ICON_CLASSES = {
+  'ASTRONAUT': 'modal__text--astronaut',
+  'ALIEN': 'modal__text--alien',
+  'DRAW': 'modal__text--draw',
 };
 
 let step = 1;
@@ -19,17 +36,26 @@ function makeStep(event) {
     if (isStepPossible) {
       gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
       if (isWinCombinationExists()) {
+        modalText.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
+        setModalTextIcon(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
         restart();
-        alert('It\'s winning combination! ' + (`${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`));
+        openModal();
       } else if (step === 9) {
+        modalText.textContent = 'It\'s draw!';
+        setModalTextIcon(MODAL_TEXT_ICON_CLASSES.DRAW);
         restart();
-        alert('It\'s draw!');
+        openModal();
       } else {
         step++;
       }
     }
   }
 }
+
+function setModalTextIcon(modalTextIconClass) {
+  modalText.classList.remove(MODAL_TEXT_ICON_CLASSES.ASTRONAUT, MODAL_TEXT_ICON_CLASSES.ALIEN, MODAL_TEXT_ICON_CLASSES.DRAW);
+  modalText.classList.add(modalTextIconClass);
+};
 
 function isFirstPlayer() {
   return step % 2 !== 0;
@@ -63,4 +89,12 @@ function restart() {
     gameFieldCell.classList.remove(GAME_FIELD_CELL_CLASSES.ASTRONAUT, GAME_FIELD_CELL_CLASSES.ALIEN);
     step = 1;
   });
+}
+
+function openModal() {
+  modal.style.display = "block";
+}
+
+function closeModal() {
+  modal.style.display = "none";
 }
