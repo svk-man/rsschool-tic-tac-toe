@@ -6,6 +6,7 @@ const modalBtnClose = modal.querySelector('.modal__btn-close');
 const modalText = modal.querySelector('.modal__text');
 
 gameField.addEventListener('click', makeStep);
+gameBtnRestart.addEventListener('click', restart);
 modalBtnClose.addEventListener('click', closeModal);
 window.addEventListener('click', (event) => {
   if (event.target == modal) {
