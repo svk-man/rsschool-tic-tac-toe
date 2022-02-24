@@ -14,7 +14,8 @@
 
 h1,
 h2,
-p {
+p,
+ol {
   margin: 0;
 }
 
@@ -130,6 +131,13 @@ a {
   cursor: not-allowed;
 }
 
+.game__btns {
+  display: flex;
+  justify-content: center;
+  column-gap: 20px;
+  flex-wrap: wrap;
+}
+
 .footer {
   height: 80px;
   border-top: 2px dashed white;
@@ -239,4 +247,8 @@ a {
   width: 100%;
   font-size: 20px;
   line-height: 28px;
+}
+
+.modal__list {
+  font-size: 24px;
 }

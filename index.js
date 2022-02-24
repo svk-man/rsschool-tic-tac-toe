@@ -1,14 +1,16 @@
 const gameField = document.querySelector('.game__field');
 const gameFieldCells = gameField.querySelectorAll('.game__field-cell');
-const gameBtnRestart = document.querySelector('.game__btn-restart');
+const gameBtnRestart = document.querySelector('.game__btn-restart')
+const gameBtnRecords = document.querySelector('.game__btn-records');
 const modal = document.querySelector('.modal');
 const modalBtnClose = modal.querySelector('.modal__btn-close');
-const modalSteps = modal.querySelector('.modal__steps');
-const modalText = modal.querySelector('.modal__text');
+const modalTitle = modal.querySelector('.modal__title');
+const modalBody = modal.querySelector('.modal__body');
 
 gameField.addEventListener('click', makeStep);
 gameBtnRestart.addEventListener('click', restart);
 modalBtnClose.addEventListener('click', closeModal);
+gameBtnRecords.addEventListener('click', showRecords);
 window.addEventListener('click', (event) => {
   if (event.target == modal) {
     closeModal();
@@ -38,19 +40,31 @@ function makeStep(event) {
     if (isStepPossible) {
       gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
       if (isWinCombinationExists() || step === 9) {
-        const stepsElement = document.createElement('span');
-        stepsElement.classList.add('modal__text-span');
-        stepsElement.textContent = `${step} steps`;
+        modalTitle.textContent = 'End game';
+        modalBody.textContent = '';
 
+        const p = document.createElement('p');
+        p.classList.add('modal__text');
+
+        let recordText = '';
         if (step !== 9) {
-          modalText.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
-          setModalTextIcon(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
+          p.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
+          p.classList.add(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
+          recordText += `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'}: `;
         } else {
-          modalText.textContent = 'It\'s draw!';
-          setModalTextIcon(MODAL_TEXT_ICON_CLASSES.DRAW);
+          p.textContent = 'It\'s draw!';
+          p.classList.add(MODAL_TEXT_ICON_CLASSES.DRAW);
+          recordText += 'Draw: ';
         }
 
-        modalText.append(stepsElement);
+        const span = document.createElement('span');
+        span.classList.add('modal__text-span');
+        span.textContent = `${step} steps`;
+        recordText += `${step} steps`;
+        p.append(span);
+
+        modalBody.append(p);
+        saveRecord(recordText);
         restart();
         openModal();
       } else {
@@ -59,11 +73,6 @@ function makeStep(event) {
     }
   }
 }
-
-function setModalTextIcon(modalTextIconClass) {
-  modalText.classList.remove(MODAL_TEXT_ICON_CLASSES.ASTRONAUT, MODAL_TEXT_ICON_CLASSES.ALIEN, MODAL_TEXT_ICON_CLASSES.DRAW);
-  modalText.classList.add(modalTextIconClass);
-};
 
 function isFirstPlayer() {
   return step % 2 !== 0;
@@ -105,4 +114,49 @@ function openModal() {
 
 function closeModal() {
   modal.style.display = "none";
+}
+
+function showRecords() {
+  openModal();
+  modalTitle.textContent = 'Records';
+  modalBody.textContent = '';
+
+  const ol = document.createElement('ol');
+  ol.classList.add('modal__list');
+
+  const records = getRecords();
+  records.forEach(recordText => {
+    const li = document.createElement('li');
+    li.classList.add('modal__list-item');
+    li.textContent = recordText;
+    ol.append(li);
+  });
+
+  modalBody.append(ol);
+}
+
+function saveRecord(recordText) {
+  const records = getRecords();
+  const lastGameText = ' - last game';
+
+  if (records.length) {
+    records.push(recordText);
+    if (records.length > 10) {
+      records.shift();
+    }
+
+    localStorage.setItem('records', records.join(';').replace(lastGameText, '') + lastGameText);
+  } else {
+    localStorage.setItem('records', [recordText + lastGameText]);
+  }
+}
+
+function getRecords() {
+  const records = localStorage.getItem('records');
+
+  if (records !== null && records !== undefined) {
+    return records.split(';');
+  }
+  
+  return [];
 }
