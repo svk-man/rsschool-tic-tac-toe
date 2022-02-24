@@ -3,6 +3,7 @@ const gameFieldCells = gameField.querySelectorAll('.game__field-cell');
 const gameBtnRestart = document.querySelector('.game__btn-restart');
 const modal = document.querySelector('.modal');
 const modalBtnClose = modal.querySelector('.modal__btn-close');
+const modalSteps = modal.querySelector('.modal__steps');
 const modalText = modal.querySelector('.modal__text');
 
 gameField.addEventListener('click', makeStep);
@@ -36,14 +37,20 @@ function makeStep(event) {
     const isStepPossible = gameFieldCell.classList.length === 1;
     if (isStepPossible) {
       gameFieldCell.classList.add(isFirstPlayer() ? GAME_FIELD_CELL_CLASSES.ASTRONAUT : GAME_FIELD_CELL_CLASSES.ALIEN);
-      if (isWinCombinationExists()) {
-        modalText.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
-        setModalTextIcon(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
-        restart();
-        openModal();
-      } else if (step === 9) {
-        modalText.textContent = 'It\'s draw!';
-        setModalTextIcon(MODAL_TEXT_ICON_CLASSES.DRAW);
+      if (isWinCombinationExists() || step === 9) {
+        const stepsElement = document.createElement('span');
+        stepsElement.classList.add('modal__text-span');
+        stepsElement.textContent = `${step} steps`;
+
+        if (step !== 9) {
+          modalText.textContent = `${isFirstPlayer() ? 'Astrounauts' : 'Aliens'} win!`;
+          setModalTextIcon(isFirstPlayer() ? MODAL_TEXT_ICON_CLASSES.ASTRONAUT : MODAL_TEXT_ICON_CLASSES.ALIEN);
+        } else {
+          modalText.textContent = 'It\'s draw!';
+          setModalTextIcon(MODAL_TEXT_ICON_CLASSES.DRAW);
+        }
+
+        modalText.append(stepsElement);
         restart();
         openModal();
       } else {

@@ -231,3 +231,10 @@ a {
 .modal__text--draw {
   background-image: url("./assets/img/svg/draw.svg");
 }
+
+.modal__text-span {
+  display: inline-block;
+  width: 100%;
+  font-size: 20px;
+  line-height: 28px;
+}
